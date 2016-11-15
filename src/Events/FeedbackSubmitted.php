@@ -9,8 +9,8 @@ class FeedbackSubmitted extends Event {
      */
     public function read(array $opts) {
 
-        $attempt = $this->repo->readFeedbackAttempt($opts['objectid']); 
-
+        $attempt = $this->repo->readFeedbackAttempt($opts['objectid']);
+        $attempt->timemodified = empty($attempt->timemodified) ? time() : $attempt->timemodified;
         return array_merge(parent::read($opts), [
             'module' => $this->repo->readModule($attempt->feedback, 'feedback'),
             'questions' => $this->repo->readFeedbackQuestions($attempt->feedback),
