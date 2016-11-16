@@ -37,9 +37,6 @@ class FeedbackSubmitted extends Event {
         else if(!empty($attempt->timestarted)){
             $retValue = $attempt->timestarted;
         }
-        else{
-            //do nothing and just leave $retValue with time()
-        }
 
         return $retValue;
     }
