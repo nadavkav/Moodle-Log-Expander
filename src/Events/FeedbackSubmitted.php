@@ -27,7 +27,7 @@ class FeedbackSubmitted extends Event {
     private function timeSelector($attempt) {
 
         $retValue = time();
-        if(!empty($attempt->timemodified)) {
+        if (!empty($attempt->timemodified)) {
             $retValue = $attempt->timemodified;
         } else if (!empty($attempt->timefinished)) {
             $retValue = $attempt->timefinished;
