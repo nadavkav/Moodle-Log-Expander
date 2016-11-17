@@ -193,6 +193,10 @@ class Repository extends PhpObj {
      * @return PhpObj
      */
     public function readCourse($id) {
+        //set to index page. to correct log in and log out issue.
+        if($id == 0){
+            $id = 1;
+        }
         $model = $this->readObject($id, 'course');
         $model->url = $this->cfg->wwwroot.($id > 0 ? '/course/view.php?id=' . $id : '');
         return $model;
