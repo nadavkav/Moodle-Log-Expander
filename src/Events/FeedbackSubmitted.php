@@ -31,7 +31,7 @@ class FeedbackSubmitted extends Event {
             $retValue = $attempt->timemodified;
         } else if (!empty($attempt->timefinished)) {
             $retValue = $attempt->timefinished;
-        } else if(!empty($attempt->timestarted)) {
+        } else if (!empty($attempt->timestarted)) {
             $retValue = $attempt->timestarted;
         }
 
