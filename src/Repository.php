@@ -193,7 +193,7 @@ class Repository extends PhpObj {
      * @return PhpObj
      */
     public function readCourse($id) {
-        if($id == 0){
+        if ($id == 0) {
             $courses = $this->store->get_records('course',array());
 
             //since get_records will return the ids as Key values for the array,
