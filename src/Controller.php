@@ -38,7 +38,7 @@ class Controller extends PhpObj {
         '\core\event\user_enrolment_created' => 'Event',
         '\mod_scorm\event\sco_launched' => 'ScormLaunched',
         '\mod_feedback\event\response_submitted' => 'FeedbackSubmitted',
-        '\core\event\course_completed'=>'CourseCompleted'
+        '\core\event\course_completed' => 'CourseCompleted'
     ];
     /**
      * Constructs a new Controller.
@@ -62,7 +62,7 @@ class Controller extends PhpObj {
                     array_push($results , (new $event($this->repo))->read($opts));
                 }
                 catch (\Exception $e) {
-                    // Error processing event; skip it.
+                    \debugging($e, DEBUG_MINIMAL);
                 }
             }
         }
