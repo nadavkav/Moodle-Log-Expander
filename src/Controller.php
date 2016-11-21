@@ -62,7 +62,7 @@ class Controller extends PhpObj {
                     array_push($results , (new $event($this->repo))->read($opts));
                 }
                 catch (\Exception $e) {
-                    \debugging($e->getMessage(), DEBUG_MINIMAL);
+                    // Error processing event; skip it.
                 }
             }
         }
