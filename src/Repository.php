@@ -173,15 +173,15 @@ class Repository extends PhpObj {
      */
     public function readGradeComment($grade_id, $assignment_id) {
         $model = $this->readStoreRecord(
-            'assignfeedback_comments', 
+            'assignfeedback_comments',
             [
-                'assignment' => $assignment_id, 
+                'assignment' => $assignment_id,
                 'grade' => $grade_id
             ]
         );
         return $model;
     }
-    
+
     /**
      * Reads a feedback attempt from the store with the given id.
      * @param String $id
@@ -218,6 +218,13 @@ class Repository extends PhpObj {
      * @return PhpObj
      */
     public function readCourse($id) {
+        if ($id == 0) {
+            $courses = $this->store->get_records('course',array());
+
+            //since get_records will return the ids as Key values for the array,
+            //just use key to find the first id in the course table for the index page
+            $id = key($courses);
+        }
         $model = $this->readObject($id, 'course');
         $model->url = $this->cfg->wwwroot.($id > 0 ? '/course/view.php?id=' . $id : '');
         return $model;
