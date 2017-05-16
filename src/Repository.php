@@ -122,6 +122,29 @@ class Repository extends PhpObj {
                 $question = $this->readStoreRecord('question', ['id' => $quizSlot->questionid]);
                 $question->answers = $this->readStoreRecords('question_answers', ['question' => $question->id]);
                 $question->url = $this->cfg->wwwroot . '/mod/question/question.php?id='.$question->id;
+
+                if ($question->qtype == 'numerical') {
+                    $question->numerical = (object)[
+                        'answers' => $this->readStoreRecords('question_numerical', ['question' => $question->id]),
+                        'options' => $this->readStoreRecord('question_numerical_options', ['question' => $question->id]),
+                        'units' => $this->readStoreRecords('question_numerical_units', ['question' => $question->id])
+                    ];
+                } else if ($question->qtype == 'match') {
+                    $question->match = (object)[
+                        'options' => $this->readStoreRecord('qtype_match_options', ['questionid' => $question->id]),
+                        'subquestions' => $this->readStoreRecords('qtype_match_subquestions', ['questionid' => $question->id])
+                    ];
+                } else if (strpos($question->qtype, 'calculated') === 0) {
+                    $question->calculated = (object)[
+                        'answers' => $this->readStoreRecords('question_calculated', ['question' => $question->id]),
+                        'options' => $this->readStoreRecord('question_calculated_options', ['question' => $question->id])
+                    ];
+                } else if ($question->qtype == 'shortanswer') {
+                    $question->shortanswer = (object)[
+                        'options' => $this->readStoreRecord('qtype_shortanswer_options', ['questionid' => $question->id])
+                    ];
+                }
+
                 $questions[$question->id] = $question;
             }
             catch (\Exception $e) {
@@ -179,12 +202,14 @@ class Repository extends PhpObj {
      */
     public function readFeedbackQuestions($id) {
         $questions = $this->readStoreRecords('feedback_item', ['feedback' => $id]);
+        $expandedQuestions = [];
         foreach ($questions as $index => $question) {
-            $question->template = $this->readStoreRecord('feedback_template', ['id' => $question->template]);
-            $question->url = $this->cfg->wwwroot . '/mod/feedback/edit_item.php?id='.$question->id;
-            $questions[$index] = $question;
+            $expandedQuestion = $question;
+            $expandedQuestion->template = $this->readStoreRecord('feedback_template', ['id' => $question->template]);
+            $expandedQuestion->url = $this->cfg->wwwroot . '/mod/feedback/edit_item.php?id='.$question->id;
+            $expandedQuestions[$index] = $expandedQuestion;
         }
-        return $questions;
+        return $expandedQuestions;
     }
 
     /**
@@ -214,6 +239,15 @@ class Repository extends PhpObj {
         $model = $this->readObject($id, 'user');
         $model->url = $this->cfg->wwwroot;
         $model->fullname = $this->fullname($model);
+        if (isset($model->password)){
+             unset($model->password);
+        }
+        if (isset($model->secret)){
+             unset($model->secret);
+        }
+        if (isset($model->lastip)){
+             unset($model->lastip);
+        }
         return $model;
     }
 
@@ -245,5 +279,31 @@ class Repository extends PhpObj {
         $model->url = $this->cfg->wwwroot;
         $model->type = "site";
         return $model;
+    }
+
+    /**
+     * Reads a face to face session
+     * @return PhpObj
+     */
+    public function readFacetofaceSession($id) {
+        $model = $this->readObject($id, 'facetoface_sessions');
+        $model->dates = $this->readStoreRecords('facetoface_sessions_dates', ['sessionid' => $id]);
+        $model->url = $this->cfg->wwwroot . '/mod/facetoface/signup.php?s=' . $id;
+        return $model;
+    }
+
+    /**
+     * Reads face to face session signups
+     * @return PhpObj
+     */
+    public function readFacetofaceSessionSignups($sessionid, $timecreated) {
+        $signups = $this->readStoreRecords('facetoface_signups', ['sessionid' => $sessionid]);
+
+        foreach ($signups as $index => $signup) {
+            $signups[$index]->statuses = $this->readStoreRecords('facetoface_signups_status', ['signupid' => $signup->id]);
+            $signups[$index]->attendee = $this->readUser($signup->userid);
+        }
+
+        return $signups;
     }
 }
