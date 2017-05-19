@@ -218,6 +218,13 @@ class Repository extends PhpObj {
      * @return PhpObj
      */
     public function readCourse($id) {
+        if ($id == 0) {
+            $courses = $this->store->get_records('course',array());
+
+            //since get_records will return the ids as Key values for the array,
+            //just use key to find the first id in the course table for the index page
+            $id = key($courses);
+        }
         $model = $this->readObject($id, 'course');
         $model->url = $this->cfg->wwwroot.($id > 0 ? '/course/view.php?id=' . $id : '');
         return $model;
