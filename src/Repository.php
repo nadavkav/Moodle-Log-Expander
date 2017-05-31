@@ -20,6 +20,7 @@ class Repository extends PhpObj {
      * Reads an object from the store with the given type and query.
      * @param String $type
      * @param [String => Mixed] $query
+     * @throws Exception if the record was not found
      * @return PhpObj
      */
     protected function readStoreRecord($type, array $query) {
@@ -312,15 +313,16 @@ class Repository extends PhpObj {
      * @return PhpObj
      */
     public function readScormScoesTrack($userid, $scormid, $scoid, $attempt) {
-        $trackingValues = array();
+        $trackingValues = [];
         $scormTracking = $this->readStoreRecords('scorm_scoes_track', [
-                                                      'userid' => $userid,
-                                                      'scormid'=> $scormid,
-                                                      'scoid' => $scoid,
-                                                      'attempt' => $attempt]);
+            'userid' => $userid,
+            'scormid'=> $scormid,
+            'scoid' => $scoid,
+            'attempt' => $attempt
+        ]);
 
-        foreach($scormTracking as $st) {
-            if($st->element == 'cmi.core.score.min') {
+        foreach ($scormTracking as $st) {
+            if ($st->element == 'cmi.core.score.min') {
                 $trackingValues['scoremin'] = $st->value;
             } else if ($st->element == 'cmi.core.score.max') {
                 $trackingValues['scoremax'] = $st->value;
