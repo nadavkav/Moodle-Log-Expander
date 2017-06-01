@@ -48,11 +48,38 @@
         "relateduserid": 1,
         "courseid": 1,
         "timecreated": 1433946701,
-        "eventname": "\\core\\event\\course_completed",
-        "objecttable": null,
-        "objectid": null,
-        "action": "completed",
-        "target": "course",
-        "component": "core"
+        "eventname": "\\mod_scorm\\event\\scoreraw_submitted",
+        "objecttable": "scorm_scoes_track",
+        "objectid": 1,
+        "contextinstanceid": 1,
+        "other": "a:3:{s:9:\"attemptid\";i:1;s:10:\"cmielement\";s:18:\"cmi.core.score.raw\";s:8:\"cmivalue\";s:3:\"100\";}"
+    },
+    "module": {
+        "id": 1,
+        "course": "1",
+        "name": "scorm_name",
+        "scormtype": "scorm_name",
+        "type": "object",
+        "url": "http:\/\/www.example.com\/mod\/scorm\/view.php?id=1"
+    },
+    "scorm_scoes_track": {
+        "status": "status",
+        "scoremax": "100",
+        "scoremin": "0"
+    },
+    "scorm_scoes": {
+        "id": 1,
+        "scorm": "1",
+        "manifest": "Course_ID1",
+        "launch": "index_scorm.html",
+        "scormtype": "sco",
+        "title": "Course Object title",
+        "sortorder": "1",
+        "type": "object"
+    },
+    "cmi_data": {
+        "attemptid": 1,
+        "cmielement": "cmi.core.score.raw",
+        "cmivalue": "100"
     }
 }

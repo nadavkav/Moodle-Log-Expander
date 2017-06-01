@@ -20,6 +20,7 @@ class Repository extends PhpObj {
      * Reads an object from the store with the given type and query.
      * @param String $type
      * @param [String => Mixed] $query
+     * @throws Exception if the record was not found
      * @return PhpObj
      */
     protected function readStoreRecord($type, array $query) {
@@ -148,7 +149,7 @@ class Repository extends PhpObj {
                 $questions[$question->id] = $question;
             }
             catch (\Exception $e) {
-                // Question not found; maybe it was deleted since the event. 
+                // Question not found; maybe it was deleted since the event.
                 // Don't add the question to the list, but also don't block the attempt event.
             }
         }
@@ -305,5 +306,40 @@ class Repository extends PhpObj {
         }
 
         return $signups;
+    }
+
+    /**
+     * Reads Scorm tracking data
+     * @return PhpObj
+     */
+    public function readScormScoesTrack($userid, $scormid, $scoid, $attempt) {
+        $trackingValues = [];
+        $scormTracking = $this->readStoreRecords('scorm_scoes_track', [
+            'userid' => $userid,
+            'scormid'=> $scormid,
+            'scoid' => $scoid,
+            'attempt' => $attempt
+        ]);
+
+        foreach ($scormTracking as $st) {
+            if ($st->element == 'cmi.core.score.min') {
+                $trackingValues['scoremin'] = $st->value;
+            } else if ($st->element == 'cmi.core.score.max') {
+                $trackingValues['scoremax'] = $st->value;
+            } else if ($st->element == 'cmi.core.lesson_status') {
+                $trackingValues['status'] = $st->value;
+            }
+        }
+
+        return $trackingValues;
+    }
+
+    /**
+     * Reads a scorm scoes
+     * @return PhpObj
+     */
+    public function readScormScoes($scoid) {
+        $model = $this->readObject($scoid, 'scorm_scoes');
+        return $model;
     }
 }

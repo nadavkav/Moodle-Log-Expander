@@ -35,7 +35,6 @@ class TestRepository extends MoodleRepository {
      * @override MoodleRepository
      */
     protected function readStoreRecords($type, array $query) {
-
         $records = $this->fakeMoodleDatabase[$type];
         $matchingRecords = [];
 
