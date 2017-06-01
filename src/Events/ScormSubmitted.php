@@ -12,10 +12,13 @@ class ScormSubmitted extends Event {
         $scoid = $opts['contextinstanceid'];
         $scormid = $opts['objectid'];
         $attempt = $cmiUnserialized['attemptid'];
-        $scormScoesTrack = $this->repo->readScormScoesTrack($opts['userid'],
-                                                              $scormid,
-                                                              $scoid,
-                                                              $attempt);
+        $scormScoesTrack = $this->repo->readScormScoesTrack(
+            $opts['userid'],
+            $scormid,
+            $scoid,
+            $attempt
+        );
+
         return array_merge(parent::read($opts), [
             'module' => $this->repo->readModule($scormid, 'scorm'),
             'scorm_scoes_track' => $scormScoesTrack,
